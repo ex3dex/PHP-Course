@@ -112,18 +112,19 @@ class Money {
 		}
 	}
 
-	public function add( $val1, $val2 ) {
-		if ( $this->validateMoney($val1) && $this->validateMoney($val2) ) {
-			$result = '';
-			$money_array1 = explode(" ", $val1);
-			$money_array2 = explode(" ", $val2);
+	public function add( $val ) {
+		if ( $this->validateMoney($val) ) {
+			$past_val = explode(" ",  $this->money );
+			$val_to_add = explode(" ",  $val );
 
-			if ( $money_array1[1] !== $money_array2[1] ) {
-				throw new InvalidArgumentException('Currency Failed');
-			} else {
-				$result = $money_array1[0] + $money_array2[0];
+			if ( $past_val[1] !== $val_to_add[1] ) {
+				return false;
 			}
-			return $result . ' ' .  $money_array1[1];
+
+			$new_val = $past_val[0];
+			$val_to_add = $past_val[0];
+
+			$this->amount = $new_val + $val_to_add;
 		}
 	}
 
@@ -136,7 +137,7 @@ $get_code = $currency->getIsoCode();
 $money1 = new Money( 15.6, $get_code );
 $money2 = new Money( 11, $get_code );
 
-$equals = new Money();
+$equals = new Money(10, $get_code );
 
 echo $get_code;
 echo '<br>';
@@ -146,4 +147,11 @@ echo $money2->getMoney();
 echo '<br>';
 echo $equals->equals( $money1->getMoney(), $money2->getMoney() );
 echo '<br>';
-echo $equals->add( $money1->getMoney(), $money2->getMoney() );
+echo $equals->add( $money1->getMoney() );
+echo $equals->getMoney();
+echo '<br>';
+echo $equals->add( $money2->getMoney() );
+echo $equals->getMoney();
+echo '<br>';
+echo $equals->add( $money2->getMoney() );
+echo $equals->getMoney();
