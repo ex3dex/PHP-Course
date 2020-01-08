@@ -57,6 +57,8 @@ class Money {
 		if ( ! empty( $currency ) ) {
 			$this->setCurrency( $currency );
 		}
+
+		$this->setMoney();
 	}
 
 	public function setAmount( $amount ) {
@@ -70,6 +72,14 @@ class Money {
 	public function setCurrency( $currency ) {
 		$currency       = preg_replace( '/\s+/', '', $currency );
 		$this->currency = $currency;
+	}
+
+	private function setMoney() {
+		if ( ! empty( $this->amount ) && ! empty( $this->currency ) ) {
+			$this->money = $this->amount . ' ' . $this->currency;
+		} else {
+			throw new InvalidArgumentException( 'Set Money Validation Failed!' );
+		}
 	}
 
 	public function getMoney() {
@@ -121,10 +131,11 @@ class Money {
 				return false;
 			}
 
-			$new_val    = $past_val[0];
-			$val_to_add = $past_val[0];
+			$current_amount = $past_val[0];
+			$val_to_add = $val_to_add[0];
 
-			$this->amount = $new_val + $val_to_add;
+			$this->amount = $current_amount + $val_to_add;
+			$this->setMoney();
 		}
 	}
 
@@ -137,7 +148,7 @@ $get_code = $currency->getIsoCode();
 $money1 = new Money( 15.6, $get_code );
 $money2 = new Money( 11, $get_code );
 
-$equals = new Money( 10, $get_code );
+$money = new Money( 10, $get_code );
 
 echo $get_code;
 echo '<br>';
@@ -145,16 +156,10 @@ echo $money1->getMoney();
 echo '<br>';
 echo $money2->getMoney();
 echo '<br>';
-echo $equals->equals( $money1->getMoney(), $money2->getMoney() );
+echo $money->equals( $money1->getMoney(), $money2->getMoney() );
 echo '<br>';
-echo $equals->add( $money1->getMoney() );
-echo $equals->getMoney();
+echo $money->add( $money1->getMoney() );
+echo $money->getMoney();
 echo '<br>';
-echo $equals->add( $money2->getMoney() );
-echo $equals->getMoney();
-echo '<br>';
-echo $equals->add( $money2->getMoney() );
-echo $equals->getMoney();
-echo '<br>';
-echo $equals->add( $money2->getMoney() );
-echo $equals->getMoney();
+echo $money->add( $money2->getMoney() );
+echo $money->getMoney();
