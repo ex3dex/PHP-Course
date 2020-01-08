@@ -6,7 +6,7 @@
 
 class Currency {
 
-	public $isoCode = '';
+	protected $isoCode = '';
 
 	//EXAMPLE OF ACCEPTABLE CODES TO WORK WITH
 	const JAPAN = 'JPY';
@@ -46,9 +46,9 @@ class Currency {
 
 class Money {
 
-	private $amount;
-	private $currency;
-	public $money;
+	protected $amount;
+	protected $currency;
+	protected $money;
 
 	public function __construct( $amount = 0, $currency = '' ) {
 		if ( $amount > 0 ) {
@@ -68,12 +68,12 @@ class Money {
 	}
 
 	public function setCurrency( $currency ) {
-		$currency = preg_replace('/\s+/', '', $currency);
+		$currency       = preg_replace( '/\s+/', '', $currency );
 		$this->currency = $currency;
 	}
 
 	public function getMoney() {
-			$this->money = $this->amount . ' ' . $this->currency;
+		$this->money = $this->amount . ' ' . $this->currency;
 		if ( $this->validateMoney( $this->money ) ) {
 			return $this->money;
 		}
@@ -82,21 +82,21 @@ class Money {
 	//Validate money
 	public function validateMoney( $money ) {
 		if ( is_string( $money ) ) {
-			$money_array = explode(" ", $money);
-			if ( is_numeric( $money_array[0] ) && is_string($money_array[1])  ) {
+			$money_array = explode( " ", $money );
+			if ( is_numeric( $money_array[0] ) && is_string( $money_array[1] ) ) {
 				return true;
 			} else {
-				throw new InvalidArgumentException('Money Validation Failed!');
+				throw new InvalidArgumentException( 'Money Validation Failed!' );
 			}
 		} else {
-			throw new InvalidArgumentException('Money Validation Failed!');
+			throw new InvalidArgumentException( 'Money Validation Failed!' );
 		}
 	}
 
-	public function equals ( $val1, $val2 ) {
-		if ( $this->validateMoney($val1) && $this->validateMoney($val2) ) {
-			$money_array1 = explode(" ", $val1);
-			$money_array2 = explode(" ", $val2);
+	public function equals( $val1, $val2 ) {
+		if ( $this->validateMoney( $val1 ) && $this->validateMoney( $val2 ) ) {
+			$money_array1 = explode( " ", $val1 );
+			$money_array2 = explode( " ", $val2 );
 
 			if ( $money_array1[1] !== $money_array2[1] ) {
 				return false;
@@ -113,15 +113,15 @@ class Money {
 	}
 
 	public function add( $val ) {
-		if ( $this->validateMoney($val) ) {
-			$past_val = explode(" ",  $this->money );
-			$val_to_add = explode(" ",  $val );
+		if ( $this->validateMoney( $val ) ) {
+			$past_val   = explode( " ", $this->money );
+			$val_to_add = explode( " ", $val );
 
 			if ( $past_val[1] !== $val_to_add[1] ) {
 				return false;
 			}
 
-			$new_val = $past_val[0];
+			$new_val    = $past_val[0];
 			$val_to_add = $past_val[0];
 
 			$this->amount = $new_val + $val_to_add;
@@ -137,7 +137,7 @@ $get_code = $currency->getIsoCode();
 $money1 = new Money( 15.6, $get_code );
 $money2 = new Money( 11, $get_code );
 
-$equals = new Money(10, $get_code );
+$equals = new Money( 10, $get_code );
 
 echo $get_code;
 echo '<br>';
@@ -148,6 +148,9 @@ echo '<br>';
 echo $equals->equals( $money1->getMoney(), $money2->getMoney() );
 echo '<br>';
 echo $equals->add( $money1->getMoney() );
+echo $equals->getMoney();
+echo '<br>';
+echo $equals->add( $money2->getMoney() );
 echo $equals->getMoney();
 echo '<br>';
 echo $equals->add( $money2->getMoney() );
