@@ -6,29 +6,26 @@ services:
       APACHE_DOCUMENT_ROOT: /src/app/public
     build: .
     depends_on:
-      - postgres
+      - mysql
     ports:
-      - "8080:80"
+      - "8082:80"
     volumes:
       - .:/var/www/html
     links:
-      - postgres
-  postgres:
-    image: "postgres:latest"
-    restart: always
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: mishatestpass
-      POSTGRES_DB: docker
+      - mysql
+  mysql:
+    image: "mysql:5.7"
     ports:
-      - "5432:5432"
-  adminer:
-    image: "adminer:latest"
-    restart: always
-    depends_on:
-      - postgres
+      - "3306:3306"
     environment:
-      ADMINER_DEFAULT_DB_HOST: postgres
-      ADMINER_DEFAULT_DB_NAME: docker
+      - MYSQL_DATABASE=docker
+      - MYSQL_ROOT_PASSWORD=mishatestpass
+  phpmyadmin:
+    image: "phpmyadmin/phpmyadmin:latest"
+    links:
+      - mysql
     ports:
-      - "8081:8080"
+      - "8003:80"
+    environment:
+      MYSQL_ROOT_PASSWORD: mishatestpass
+      PMA_HOST: mysql
