@@ -73,8 +73,8 @@ class Money {
 	}
 
 	public function getMoney() {
-		$this->money = $this->amount . ' ' . $this->currency;
 		if ( $this->validateMoney( $this->money ) ) {
+			$this->money = $this->amount . ' ' . $this->currency;
 			return $this->money;
 		}
 	}
